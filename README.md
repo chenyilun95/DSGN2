@@ -11,7 +11,7 @@ Yilun Chen, Shijia Huang, Shu Liu, Bei Yu, Jiaya Jia
 
 ### Update
 
-- 7/2022: We released the first vision-based model that achieved <span style="color:red">70+ AP</span> on the KITTI *val* set.
+- 7/2022: We released the first vision-based model that achieved **70+ AP** on the KITTI *val* set.
 
 ### Model Framework
 
