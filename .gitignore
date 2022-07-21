@@ -12,5 +12,3 @@ tmp/
 ckpt/*.eval/
 *.ply
 *.json
-*.jpg
-*.pth
