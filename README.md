@@ -1,17 +1,17 @@
 # DSGN++
 
-## Introduction
+[![PWC](https://img.shields.io/endpoint.svg?url=https://paperswithcode.com/badge/dsgn-exploiting-visual-spatial-relation/3d-object-detection-from-stereo-images-on-1)](https://paperswithcode.com/sota/3d-object-detection-from-stereo-images-on-1?p=dsgn-exploiting-visual-spatial-relation)
 
-This is the official implementation of the paper DSGN++: Exploiting Visual-Spatial Relation for Stereo-based 3D Detectors to jointly estimate scene depth and detect 3D objects in 3D world. With input of binocular image pair, our model achieves over 70+ AP on the KITTI *val* dataset.
+This is the official implementation of the paper ""DSGN++: Exploiting Visual-Spatial Relation for Stereo-based 3D Detectors"" to jointly estimate scene depth and detect 3D objects in 3D world. With input of binocular image pair, our model achieves over 70+ AP on the KITTI *val* dataset.
 
 **DSGN++: Exploiting Visual-Spatial Relation for Stereo-based 3D Detectors**<br/>
-Yilun Chen, Shijia Huang, Shu Liu, Bei Yu, Jiaya Jia
+Authors: Yilun Chen, Shijia Huang, Shu Liu, Bei Yu, Jiaya Jia
 
 [[Paper]](https://arxiv.org/abs/2204.03039) &nbsp; [[Demo Video]](https://youtu.be/DdvX8WOG0iU)&nbsp; 
 
 ### Update
 
-- 7/2022: We released the first vision-based model that achieved <span style="color:red">70+ AP</span> on the KITTI *val* set.
+- 7/2022: We released the first vision-based model that achieved **70+ AP** on the KITTI *val* set.
 
 ### Model Framework
 
@@ -111,7 +111,7 @@ We provide the pretrained models of DSGN2 evaluated on the KITTI *val* set.
     </thead>
     <tbody>
         <tr>
-            <td>DSGN(Car)</td>
+            <td>DSGN++(Car)</td>
             <td>70.05</td>
             <td>39.42</td>
             <td>44.47</td>
@@ -127,7 +127,7 @@ We provide the pretrained models of DSGN2 evaluated on the KITTI *val* set.
 If you find our work useful in your research, please consider citing:
 ```
 @article{chen2022dsgn++,
-  title={DSGN++: Exploiting Visual-Spatial Relation forStereo-based 3D Detectors},
+  title={DSGN++: Exploiting Visual-Spatial Relation for Stereo-based 3D Detectors},
   author={Chen, Yilun and Huang, Shijia and Liu, Shu and Yu, Bei and Jia, Jiaya},
   journal={arXiv preprint arXiv:2204.03039},
   year={2022}
