@@ -1,6 +1,8 @@
 # DSGN++
 
 [![PWC](https://img.shields.io/endpoint.svg?url=https://paperswithcode.com/badge/dsgn-exploiting-visual-spatial-relation/3d-object-detection-from-stereo-images-on-1)](https://paperswithcode.com/sota/3d-object-detection-from-stereo-images-on-1?p=dsgn-exploiting-visual-spatial-relation)
+[![PWC](https://img.shields.io/endpoint.svg?url=https://paperswithcode.com/badge/dsgn-exploiting-visual-spatial-relation/3d-object-detection-from-stereo-images-on-2)](https://paperswithcode.com/sota/3d-object-detection-from-stereo-images-on-2?p=dsgn-exploiting-visual-spatial-relation)
+[![PWC](https://img.shields.io/endpoint.svg?url=https://paperswithcode.com/badge/dsgn-exploiting-visual-spatial-relation/3d-object-detection-from-stereo-images-on-3)](https://paperswithcode.com/sota/3d-object-detection-from-stereo-images-on-3?p=dsgn-exploiting-visual-spatial-relation)
 
 This is the official implementation of the paper ""DSGN++: Exploiting Visual-Spatial Relation for Stereo-based 3D Detectors"" to jointly estimate scene depth and detect 3D objects in 3D world. With input of binocular image pair, our model achieves over 70+ AP on the KITTI *val* dataset.
 
