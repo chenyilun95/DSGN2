@@ -111,7 +111,7 @@ We provide the pretrained models of DSGN2 evaluated on the KITTI *val* set.
     </thead>
     <tbody>
         <tr>
-            <td>DSGN++(Car)</td>
+            <td>DSGN++</td>
             <td>70.05</td>
             <td>39.42</td>
             <td>44.47</td>
