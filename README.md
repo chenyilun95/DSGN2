@@ -132,7 +132,8 @@ If you find our work useful in your research, please consider citing:
   title={DSGN++: Exploiting Visual-Spatial Relation for Stereo-Based 3D Detectors}, 
   author={Chen, Yilun and Huang, Shijia and Liu, Shu and Yu, Bei and Jia, Jiaya},
   journal={IEEE Transactions on Pattern Analysis and Machine Intelligence}, 
-  year={2022}}
+  year={2022}
+}
 ```
 
 ### Acknowledgment
