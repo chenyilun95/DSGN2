@@ -1,4 +1,4 @@
-# DSGN++
+# DSGN++ (T-PAMI 2022)
 
 [![PWC](https://img.shields.io/endpoint.svg?url=https://paperswithcode.com/badge/dsgn-exploiting-visual-spatial-relation/3d-object-detection-from-stereo-images-on-1)](https://paperswithcode.com/sota/3d-object-detection-from-stereo-images-on-1?p=dsgn-exploiting-visual-spatial-relation)
 [![PWC](https://img.shields.io/endpoint.svg?url=https://paperswithcode.com/badge/dsgn-exploiting-visual-spatial-relation/3d-object-detection-from-stereo-images-on-2)](https://paperswithcode.com/sota/3d-object-detection-from-stereo-images-on-2?p=dsgn-exploiting-visual-spatial-relation)
