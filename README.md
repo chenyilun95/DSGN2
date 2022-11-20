@@ -128,12 +128,11 @@ We provide the pretrained models of DSGN2 evaluated on the KITTI *val* set.
 ### Citation
 If you find our work useful in your research, please consider citing:
 ```
-@article{chen2022dsgn++,
-  title={DSGN++: Exploiting Visual-Spatial Relation for Stereo-based 3D Detectors},
+@ARTICLE{chen2022dsgn++,
+  title={DSGN++: Exploiting Visual-Spatial Relation for Stereo-Based 3D Detectors}, 
   author={Chen, Yilun and Huang, Shijia and Liu, Shu and Yu, Bei and Jia, Jiaya},
-  journal={arXiv preprint arXiv:2204.03039},
-  year={2022}
-}
+  journal={IEEE Transactions on Pattern Analysis and Machine Intelligence}, 
+  year={2022}}
 ```
 
 ### Acknowledgment
