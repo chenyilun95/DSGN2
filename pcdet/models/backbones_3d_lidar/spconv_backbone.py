@@ -2,7 +2,8 @@
 
 
 from functools import partial
-import spconv
+# import spconv
+import spconv.pytorch as spconv # correct with new
 import torch.nn as nn
 import warnings
 import torch.distributed as dist
