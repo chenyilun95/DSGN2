@@ -169,26 +169,37 @@ class DataProcessor(object):
             try:
                 from spconv.utils import VoxelGeneratorV2 as VoxelGenerator
             except:
-                from spconv.utils import VoxelGenerator
-
-            voxel_generator = VoxelGenerator(
-                voxel_size=config.VOXEL_SIZE,
-                point_cloud_range=self.point_cloud_range,
-                max_num_points=config.MAX_POINTS_PER_VOXEL,
-                max_voxels=config.MAX_NUMBER_OF_VOXELS[self.mode]
+                # from spconv.utils import VoxelGenerator
+                # change VoxelGenerator to PointToVoxel
+                from spconv.pytorch.utils import PointToVoxel
+            
+            voxel_generator = PointToVoxel(
+                vsize_xyz=config.VOXEL_SIZE,
+                coors_range_xyz=self.point_cloud_range,
+                num_point_features=3,
+                max_num_points_per_voxel=config.MAX_NUMBER_OF_VOXELS[self.mode],
+                max_num_voxels=config.MAX_POINTS_PER_VOXEL
             )
+            # voxel_generator = VoxelGenerator(
+            #     voxel_size=config.VOXEL_SIZE,
+            #     point_cloud_range=self.point_cloud_range,
+            #     max_num_points=config.MAX_POINTS_PER_VOXEL,
+            #     max_voxels=config.MAX_NUMBER_OF_VOXELS[self.mode]
+            # )
             grid_size = (self.point_cloud_range[3:6] - self.point_cloud_range[0:3]) / np.array(config.VOXEL_SIZE)
             self.grid_size = np.round(grid_size).astype(np.int64)
             self.voxel_size = config.VOXEL_SIZE
             return partial(self.transform_points_to_voxels, voxel_generator=voxel_generator)
 
         points = data_dict['points']
-        voxel_output = voxel_generator.generate(points)
-        if isinstance(voxel_output, dict):
-            voxels, coordinates, num_points = \
-                voxel_output['voxels'], voxel_output['coordinates'], voxel_output['num_points_per_voxel']
-        else:
-            voxels, coordinates, num_points = voxel_output
+        points_torch = torch.from_numpy(points)
+        voxels, coordinates, num_points = voxel_generator(points_torch, empty_mean=True)
+        # voxel_output = voxel_generator.generate(points)
+        # if isinstance(voxel_output, dict):
+        #     voxels, coordinates, num_points = \
+        #         voxel_output['voxels'], voxel_output['coordinates'], voxel_output['num_points_per_voxel']
+        # else:
+        #     voxels, coordinates, num_points = voxel_output
 
         if not data_dict['use_lead_xyz']:
             voxels = voxels[..., 3:]  # remove xyz in voxels(N, 3)

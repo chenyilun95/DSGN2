@@ -203,6 +203,8 @@ class LiDARKittiDataset(DatasetTemplate):
         import torch
 
         database_save_path = Path(self.root_path) / ('gt_database' if split == 'train' else ('gt_database_%s' % split))
+        # save image
+        image_save_path = database_save_path / ('images')
 
         if image_crops:
             db_info_save_path = Path(self.root_path) / ('stereo_kitti_dbinfos_%s.pkl' % split)
@@ -210,6 +212,8 @@ class LiDARKittiDataset(DatasetTemplate):
             db_info_save_path = Path(self.root_path) / ('kitti_dbinfos_%s.pkl' % split)
         
         database_save_path.mkdir(parents=True, exist_ok=True)
+        # save image
+        image_save_path.mkdir(parents=True, exist_ok=True)
         all_db_infos = {}
 
         with open(info_path, 'rb') as f:
