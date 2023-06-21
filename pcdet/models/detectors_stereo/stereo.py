@@ -10,10 +10,12 @@ class STEREO(StereoDetector3DTemplate):
         self.module_list = self.build_networks()
 
     def forward(self, batch_dict):
-        with T(self.__module__.split('.')[-1], record=True, enable=not self.training):
-            for cur_module in self.module_list:
-                with T(cur_module.__module__.split('.')[-1], enable=not self.training):
-                    batch_dict = cur_module(batch_dict)
+        # with T(self.__module__.split('.')[-1], record=True, enable=not self.training):
+        #     for cur_module in self.module_list:
+        #         with T(cur_module.__module__.split('.')[-1], enable=not self.training):
+        #             batch_dict = cur_module(batch_dict)
+        for cur_module in self.module_list:
+            batch_dict = cur_module(batch_dict)
 
         if self.model_cfg.get('RETURN_BATCH_DICT', False):
             keys_to_remove = ['sem_features',

@@ -27,7 +27,13 @@ class MonoDataAugmentor(object):
                 else:
                     cur_augmentor = partial(getattr(self, cur_cfg.NAME), config=cur_cfg)
                 self.data_augmentor_queue.append(cur_augmentor)
-            
+
+    def set_epoch(self, cur_epoch):
+        self.epoch = cur_epoch
+        for aug in self.data_augmentor_queue:
+            if hasattr(aug, 'set_epoch'):
+                aug.set_epoch(cur_epoch)
+
     def gt_sampling(self, config=None):
         db_sampler = mono_database_sampler.DataBaseSampler(
             root_path=self.root_path,
@@ -147,15 +153,15 @@ class MonoDataAugmentor(object):
             valid_mask &= gt_truncated < gt_truncated_threshold
 
         cared_mask = data_dict['gt_boxes_mask'].copy()
-        if not all(valid_mask):
-            invalid_mask = ~valid_mask
-            print(config)
-            print('filter truncated ratio:', truncated_ratio[invalid_mask] if area_ratio_threshold is not None else 'null',
-                  '3d boxes', data_dict['gt_boxes'][cared_mask][invalid_mask],
-                  'flipped', data_dict['calib'].flipped,
-                  'image idx', data_dict['image_idx'],
-                  'frame_id', data_dict['frame_id'],
-                  '\n')
+        # if not all(valid_mask):
+        #     invalid_mask = ~valid_mask
+        #     print(config)
+        #     print('filter truncated ratio:', truncated_ratio[invalid_mask] if area_ratio_threshold is not None else 'null',
+        #           '3d boxes', data_dict['gt_boxes'][cared_mask][invalid_mask],
+        #           'flipped', data_dict['calib'].flipped,
+        #           'image idx', data_dict['image_idx'],
+        #           'frame_id', data_dict['frame_id'],
+        #           '\n')
 
         data_dict['gt_boxes_mask'][cared_mask] = valid_mask
         return data_dict

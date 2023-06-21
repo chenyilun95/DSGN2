@@ -50,6 +50,9 @@ class DatasetTemplate(torch_data.Dataset):
         del d['logger']
         return d
 
+    def set_epoch(self, cur_epoch):
+        self.epoch = cur_epoch
+
     def __setstate__(self, d):
         self.__dict__.update(d)
 

@@ -105,59 +105,17 @@ class DataProcessor(object):
         pts_img, pts_depth = calib.rect_to_img(rect_points[:, :3])
         iy, ix = np.round(pts_img[:, 1]).astype(np.int64), np.round(pts_img[:, 0]).astype(np.int64)
         
-        voxel_centers_dev = np.stack([pts_img[:, 0] - ix, pts_img[:, 1] - iy], axis=-1)             # deviation from projection ray, value within [-0.5, 0.5]
-
         voxels_in_ray = (iy >= 0) & (ix >= 0) & (iy < voxelized_depth_gt_img.shape[0]) & (ix < voxelized_depth_gt_img.shape[1])
         voxels_in_ray = np.where(voxels_in_ray)[0]
 
         valid_voxel = voxelized_depth_gt_img[iy[voxels_in_ray], ix[voxels_in_ray]] > 0.00001
         voxels_in_ray = voxels_in_ray[valid_voxel]
 
-        gt_dev = voxelized_deviation_gt_img[iy[voxels_in_ray], ix[voxels_in_ray]]
-
-        ray_dist = np.linalg.norm(voxelized_deviation_gt_img[iy[voxels_in_ray], ix[voxels_in_ray]] - voxel_centers_dev[voxels_in_ray], axis=-1)
-
         valid_occupancy = (voxelized_depth_gt_img[iy[voxels_in_ray], ix[voxels_in_ray]] >= pts_depth[voxels_in_ray] - self.VOXEL_X_SIZE / 2.) \
             & (voxelized_depth_gt_img[iy[voxels_in_ray], ix[voxels_in_ray]] <= pts_depth[voxels_in_ray] + self.VOXEL_X_SIZE / 2.)
         
-        if False:
-            gt_boxes = data_dict['gt_boxes']
-            gt_names = data_dict['gt_names']
-            num_obj = gt_boxes.shape[0]
-            from pcdet.ops.roiaware_pool3d import roiaware_pool3d_utils
-            point_indices = roiaware_pool3d_utils.points_in_boxes_cpu(
-                torch.from_numpy(points[:, 0:3]), torch.from_numpy(gt_boxes[:,:7])
-            ).numpy()  # (nboxes, npoints)
-
-            gt_inst_voxels = []
-            for i in range(num_obj):
-                gt_points = points[point_indices[i] > 0]
-                gt_voxelized_points = (gt_points[:, :3] / np.asarray([0.2,0.2,0.2])).astype(int)
-                gt_inst_voxels.append( [gt_boxes[i, -1], gt_boxes[i, 0], len(np.unique( (gt_voxelized_points[:, 0] * 2000**2 + gt_voxelized_points[:, 1] * 2000 + gt_voxelized_points[:, 2]) ))] )
-
-            gt_inst_voxels = np.array(gt_inst_voxels)
-            np.save(f'./temp/{data_dict["frame_id"]}.npy', gt_inst_voxels)
-
-        # def save_point_cloud_o3d(xyz, color, filename):
-        #     import open3d as o3d
-        #     pcd = o3d.geometry.PointCloud()
-        #     pcd.points = o3d.utility.Vector3dVector(xyz)
-        #     pcd.colors = o3d.utility.Vector3dVector(color)
-        #     o3d.io.write_point_cloud(filename, pcd)
-        #     print(f'pc save to {filename}')
-
-        # save_point_cloud_o3d(rect_points[voxels_in_ray], np.ones_like(rect_points[voxels_in_ray]), 'voxels_in_ray.ply')
-        # save_point_cloud_o3d(rect_points[voxels_in_ray[valid_occupancy]], np.ones_like(rect_points[voxels_in_ray[valid_occupancy]]), 'valid_voxels_in_ray.ply')
-        # save_point_cloud_o3d(rect_voxelized_points, np.ones_like(rect_voxelized_points), 'raw_points.ply')
-
-        # with open('save_data.txt', 'w+') as f:
-        #     for i in [5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55]:
-        #         print(i, (rect_points[voxels_in_ray[valid_occupancy]][:,2] < i).sum(), (points[:,0]<i).sum(),  (rect_points[voxels_in_ray[valid_occupancy]][:,2] < i).sum() / (points[:,0]<i).sum())
-        #         f.write('{} {} {} {}\n'.format(i, (rect_points[voxels_in_ray[valid_occupancy]][:,2] < i).sum(), (points[:,0]<i).sum(),  (rect_points[voxels_in_ray[valid_occupancy]][:,2] < i).sum() / (points[:,0]<i).sum()))
-
         if config.get('POS_WEIGHT', False):
             data_dict['norm_dist'] = np.linalg.norm(rect_points[voxels_in_ray], axis=1)
-        data_dict['ray_dist'] = ray_dist
 
         data_dict['voxels_in_ray'] = voxels_in_ray
         data_dict['occupany_of_voxels_in_ray'] = valid_occupancy.astype(np.float32)

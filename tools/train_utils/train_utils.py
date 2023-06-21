@@ -121,7 +121,8 @@ def train_model(model, optimizer, train_loader, model_func, lr_scheduler, optim_
         for cur_epoch in tbar:
             if train_sampler is not None:
                 train_sampler.set_epoch(cur_epoch)
-
+            train_loader.dataset.set_epoch(cur_epoch)
+            
             # train one epoch
             if lr_warmup_scheduler is not None and cur_epoch < optim_cfg.WARMUP_EPOCH:
                 cur_scheduler = lr_warmup_scheduler

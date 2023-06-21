@@ -28,7 +28,7 @@ ROOT_PATH
 │   ├── kitti
 │   │   │── ImageSets
 │   │   │── training
-│   │   │   ├──calib & velodyne & label_2 & image_2 & image_3 & (optional: planes)
+│   │   │   ├──calib & velodyne & label_2 & image_2 & image_3 & planes
 │   │   │── testing
 │   │   │   ├──calib & velodyne & image_2 & image_3
 ├── pcdet
@@ -42,6 +42,8 @@ python -m pcdet.datasets.kitti.lidar_kitti_dataset create_kitti_infos
 python -m pcdet.datasets.kitti.lidar_kitti_dataset create_gt_database_only --image_crops
 ```
 
+Keep in mind that download and put the pre-computed road plane to ```./kitti/training/planes``` for precise copy-paste augmentation. 
+
 ### Installation
 
 (1) Clone this repository.
@@ -54,16 +56,28 @@ cd DSGN2
 ```
 pip install pycocotools==2.0.2
 pip install torch==1.7.1 torchvision==0.8.2
-pip install mmcv-full==1.4.0 -f https://download.openmmlab.com/mmcv/dist/cu101/torch1.7.1/index.html
+pip install -U mim
+mim install mmcv-full==1.4.0
 ```
 
-(2) Install mmdetection-v2.22.0 inside the this .
+(3) Install the spconv library.
+```
+sudo apt install libboost-dev
+git clone https://github.com/traveller59/spconv --recursive
+cd spconv
+git reset --hard f22dd9
+git submodule update --recursive
+python setup.py bdist_wheel
+pip install ./dist/spconv-1.2.1-xxx.whl
+```
+
+(4) Install the included mmdetection-v2.22.0.
 ```
 cd mmdetection-v2.22.0
 pip install -e .
 ```
 
-(3) Install the pcdet library.
+(5) Install OpenPCDet library.
 ```
 pip install -e .
 ```
@@ -79,7 +93,8 @@ python -m torch.distributed.launch --nproc_per_node=4 tools/train.py \
     --sync_bn \
     --save_to_file \
     --cfg_file ./configs/stereo/kitti_models/dsgn2.yaml \
-    --tcp_port 12345 
+    --tcp_port 12345 \
+    --continue_train
 ```
 
 Evaluating the model by
@@ -94,7 +109,7 @@ python -m torch.distributed.launch --nproc_per_node=4 tools/test.py \
     --ckpt_id 60 
 ```
 
-The evaluation results can be found in the model folder.
+The evaluation results can be found in the outputing model folder.
 
 ### Performance and Model Zoo
 
@@ -121,9 +136,6 @@ We provide the pretrained models of DSGN2 evaluated on the KITTI *val* set.
         </tr>
     </tbody>
 </table>
-
-## ToDo list
-- [ ] STILL In Progress
 
 ### Citation
 If you find our work useful in your research, please consider citing:

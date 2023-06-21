@@ -341,9 +341,6 @@ class Detector3DTemplate(nn.Module):
         checkpoint = torch.load(filename, map_location=loc_type)
         model_state_disk = checkpoint['model_state']
 
-        if 'version' in checkpoint:
-            logger.info('==> Checkpoint trained from version: %s' % checkpoint['version'])
-
         update_model_state = {}
         invalid_states = []
         for key, val in model_state_disk.items():
@@ -390,8 +387,6 @@ class Detector3DTemplate(nn.Module):
                     optimizer_ckpt = torch.load(optimizer_filename, map_location=loc_type)
                     optimizer.load_state_dict(optimizer_ckpt['optimizer_state'])
 
-        if 'version' in checkpoint:
-            print('==> Checkpoint trained from version: %s' % checkpoint['version'])
         logger.info('==> Done')
 
         return it, epoch

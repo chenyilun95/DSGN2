@@ -254,15 +254,16 @@ class DSGN2Backbone(nn.Module):
                 m.bias.data.zero_()
 
         if self.voxel_occupancy:
-            torch.nn.init.normal_(self.pred_occupancy[-2].weight, mean=0, std=0.01)
-            torch.nn.init.constant_(self.pred_occupancy[-2].bias, -2.19)
+            torch.nn.init.normal_(self.pred_occupancy[0][0].weight, mean=0, std=0.01)
+            # torch.nn.init.constant_(self.pred_occupancy[0][0].bias, -2.19)
 
     def pred_depth(self, depth_conv_module, cost1, img_shape):
         cost1 = depth_conv_module(cost1)
-        # cost1 = F.interpolate(
-        #     cost1, [self.maxdisp, *img_shape],
-        #     mode='trilinear',
-        #     align_corners=True)
+        if cost1.shape[2] != self.maxdisp:
+            cost1 = F.interpolate(
+                cost1, [self.maxdisp, *img_shape],
+                mode='trilinear',
+                align_corners=True)
         cost1 = torch.squeeze(cost1, 1)
         cost1_softmax = F.softmax(cost1, dim=1)
         pred1 = self.dispregression(cost1_softmax,
@@ -521,10 +522,14 @@ class DSGN2Backbone(nn.Module):
 
         Voxel = self.rpn3d_convs(Voxel) 
         if self.num_3dconvs_hg > 0:
-            pre, post = None, None
-            assert self.num_3dconvs_hg == 1
-            for hg_stereo_module in self.rpn3d_hgs:
-                Voxel = hg_stereo_module(Voxel, pre, post)
+            if self.num_3dconvs_hg == 1:
+                pre, post = True, True
+                for hg_stereo_module in self.rpn3d_hgs:
+                    Voxel, pre, post = hg_stereo_module(Voxel, pre, post)
+            else:
+                pre, post = None, None
+                for hg_stereo_module in self.rpn3d_hgs:
+                    Voxel = hg_stereo_module(Voxel, pre, post)
         batch_dict['volume_features_nopool'] = Voxel
 
         if self.sup_geometry == 'volume':

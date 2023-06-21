@@ -97,6 +97,7 @@ class DataBaseSampler(object):
         self.limit_whole_scene = sampler_cfg.get('LIMIT_WHOLE_SCENE', False)
         self.transform_sample = sampler_cfg.get('TRANSFORM_SAMPLE', False)
         self.filter_occlusion_overlap = sampler_cfg.get('filter_occlusion_overlap', 1.)
+        self.stop_epoch = getattr(self.sampler_cfg, 'stop_epoch', None)
 
         for x in sampler_cfg.SAMPLE_GROUPS:
             class_name, sample_num = x.split(':')
@@ -139,6 +140,9 @@ class DataBaseSampler(object):
 
     def __setstate__(self, d):
         self.__dict__.update(d)
+
+    def set_epoch(self, cur_epoch):
+        self.epoch = cur_epoch
 
     def filter_by_difficulty(self, db_infos, removed_difficulty):
         new_db_infos = {}
@@ -383,6 +387,10 @@ class DataBaseSampler(object):
             return data_dict
         
         if np.random.rand() > self.sampler_cfg.get('ratio', 0.6):
+            return data_dict
+        
+        if self.stop_epoch is not None and self.epoch >= self.stop_epoch:
+            print("Remove ground-truth data sampling at last 5 epochs.")
             return data_dict
         
         gt_boxes = data_dict['gt_boxes']

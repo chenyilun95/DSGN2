@@ -18,8 +18,6 @@ class VoxelLossHead(nn.Module):
         self.min_depth = point_cloud_range[0]
         self.max_depth = point_cloud_range[3]
         self.pos_weight = model_cfg.POS_WEIGHT
-        self.ray_dist_weight = getattr(model_cfg, 'RAY_DIST_WEIGHT', False)
-        self.ray_dist_sigma = getattr(model_cfg, 'RAY_DIST_SIGMA', 1.)
 
     def get_loss(self, batch_dict, tb_dict=None):     
         if tb_dict is None:
@@ -52,9 +50,6 @@ class VoxelLossHead(nn.Module):
             if self.pos_weight:
                 norm_dist = torch.as_tensor(batch_dict['norm_dist'][i], device='cuda')
                 weight *= norm_dist
-            if self.ray_dist_weight:
-                ray_dist = torch.as_tensor(batch_dict['ray_dist'][i], device='cuda')
-                weight *= torch.exp( -ray_dist / self.ray_dist_sigma )
             voxel_loss_per_batch = (voxel_loss_per_batch * weight).sum() / (occupany_of_voxels_in_ray * weight).sum()
             voxel_loss += voxel_loss_per_batch / N
         

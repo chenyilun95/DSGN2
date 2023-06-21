@@ -421,10 +421,6 @@ class StereoDetector3DTemplate(nn.Module):
         checkpoint = torch.load(filename, map_location=loc_type)
         model_state_disk = checkpoint['model_state']
 
-        if 'version' in checkpoint:
-            logger.info('==> Checkpoint trained from version: %s' %
-                        checkpoint['version'])
-
         update_model_state = {}
         for key, val in model_state_disk.items():
             if key in self.state_dict() and self.state_dict()[key].shape == model_state_disk[key].shape:
@@ -471,9 +467,6 @@ class StereoDetector3DTemplate(nn.Module):
                     optimizer.load_state_dict(
                         optimizer_ckpt['optimizer_state'])
 
-        if 'version' in checkpoint:
-            print('==> Checkpoint trained from version: %s' %
-                  checkpoint['version'])
         logger.info('==> Done')
 
         return it, epoch

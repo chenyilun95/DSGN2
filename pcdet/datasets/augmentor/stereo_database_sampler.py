@@ -77,6 +77,7 @@ class DataBaseSampler(object):
         self.limit_whole_scene = sampler_cfg.get('LIMIT_WHOLE_SCENE', False)
         self.filter_occlusion_overlap = sampler_cfg.get('filter_occlusion_overlap', 1.)
         self.far_to_near = getattr(self.sampler_cfg, 'far_to_near', False)
+        self.stop_epoch = getattr(self.sampler_cfg, 'stop_epoch', None)
 
         for x in sampler_cfg.SAMPLE_GROUPS:
             class_name, sample_num = x.split(':')
@@ -96,6 +97,9 @@ class DataBaseSampler(object):
 
     def __setstate__(self, d):
         self.__dict__.update(d)
+    
+    def set_epoch(self, cur_epoch):
+        self.epoch = cur_epoch
 
     def filter_by_difficulty(self, db_infos, removed_difficulty):
         new_db_infos = {}
@@ -266,6 +270,7 @@ class DataBaseSampler(object):
                 sampled_gt_boxes, mv_height = self.put_boxes_on_pseudo_road_planes(
                     sampled_gt_boxes, points, data_dict['calib'], data_dict['gt_boxes']
                 )
+                raise ValueError('Please use the pre-computed road planes for better results.')
 
         left_img = data_dict['left_img']
         right_img = data_dict['right_img']
@@ -418,6 +423,10 @@ class DataBaseSampler(object):
             return data_dict
         
         if np.random.rand() > self.sampler_cfg.get('ratio', 0.6):
+            return data_dict
+        
+        if self.stop_epoch is not None and self.epoch >= self.stop_epoch:
+            print("Remove ground-truth data sampling at last 5 epochs.")
             return data_dict
         
         gt_boxes = data_dict['gt_boxes']

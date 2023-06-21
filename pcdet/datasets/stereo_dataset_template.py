@@ -86,6 +86,11 @@ class StereoDatasetTemplate(torch_data.Dataset):
 
     def __setstate__(self, d):
         self.__dict__.update(d)
+    
+    def set_epoch(self, cur_epoch):
+        self.epoch = cur_epoch
+        if hasattr(self, 'data_augmentor'):
+            self.data_augmentor.set_epoch(cur_epoch)
 
     @staticmethod
     def generate_prediction_dicts(batch_dict, pred_dicts, class_names, output_path=None):
@@ -281,7 +286,7 @@ class StereoDatasetTemplate(torch_data.Dataset):
                 ret[key] = val
             elif key in ['gt_names', 'gt_truncated', 'gt_occluded', 'gt_difficulty', 'gt_index']:
                 ret[key] = [np.array(x) for x in val]
-            elif key in ['calib', 'calib_ori', 'use_lead_xyz', 'voxels_in_ray', 'occupany_of_voxels_in_ray', 'input_mask', 'fgmask']:
+            elif key in ['calib', 'calib_ori', 'use_lead_xyz', 'voxels_in_ray', 'occupany_of_voxels_in_ray', 'input_mask', 'fgmask', 'norm_dist']:
                 ret[key] = val
             elif key in ['frame_id', 'image_shape', 'random_T', 'inv_random_T']:
                 ret[key] = np.stack(val, axis=0)
